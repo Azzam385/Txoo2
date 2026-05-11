@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TXOO FUTURE SYSTEM</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial,sans-serif;
+}
+
+body{
+  background:black;
+  overflow:hidden;
+  color:#00fff2;
+  height:100vh;
+}
+
+/* BACKGROUND */
+.bg{
+  position:fixed;
+  width:100%;
+  height:100%;
+  background:radial-gradient(circle at top,#001d3d,#000);
+  z-index:-2;
+}
+
+.bg::before{
+  content:"";
+  position:absolute;
+  width:200%;
+  height:200%;
+  background-image:
+  linear-gradient(#00fff222 1px,transparent 1px),
+  linear-gradient(90deg,#00fff222 1px,transparent 1px);
+  background-size:50px 50px;
+  animation:move 8s linear infinite;
+}
+
+@keyframes move{
+  from{
+    transform:translate(0,0);
+  }
+  to{
+    transform:translate(-50px,-50px);
+  }
+}
+
+.container{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+}
+
+#clock{
+  font-size:28px;
+  margin-bottom:20px;
+  text-shadow:0 0 15px #00fff2;
+}
+
+button{
+  padding:15px 30px;
+  border:none;
+  border-radius:12px;
+  background:#00fff2;
+  color:black;
+  font-weight:bold;
+  cursor:pointer;
+  box-shadow:0 0 20px #00fff2;
+  transition:0.3s;
+}
+
+button:hover{
+  transform:scale(1.1);
+  box-shadow:0 0 40px #00fff2;
+}
+
+#loadingBox{
+  display:none;
+  margin-top:20px;
+  text-align:center;
+}
+
+.bar{
+  width:300px;
+  height:20px;
+  border:2px solid #00fff2;
+  border-radius:20px;
+  overflow:hidden;
+  margin-top:10px;
+  box-shadow:0 0 15px #00fff2;
+}
+
+.progress{
+  width:0%;
+  height:100%;
+  background:#00fff2;
+}
+
+#editorBox{
+  display:none;
+  padding:20px;
+}
+
+#editor{
+  width:100%;
+  height:60vh;
+  background:#00000099;
+  border:2px solid #00fff2;
+  border-radius:15px;
+  padding:20px;
+  color:#00fff2;
+  outline:none;
+  overflow:auto;
+  box-shadow:0 0 20px #00fff2;
+}
+
+.menu{
+  margin-top:15px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.smallBtn{
+  padding:10px 15px;
+}
+
+.light{
+  background:white;
+  color:black;
+}
+
+.light #editor{
+  color:black;
+  border:2px solid black;
+  box-shadow:none;
+}
+
+#typing{
+  margin-top:15px;
+  color:#00ff88;
+  text-shadow:0 0 10px #00ff88;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="bg"></div>
+
+<div class="container" id="home">
+
+<h1 style="margin-bottom:15px;">⚡ TXOO FUTURE WEB</h1>
+
+<div id="clock"></div>
+
+<button onclick="startSystem()">START SYSTEM</button>
+
+<div id="loadingBox">
+  <p>Loading futuristic system...</p>
+
+  <div class="bar">
+    <div class="progress" id="bar"></div>
+  </div>
+
+  <h2 id="percent">0%</h2>
+</div>
+
+</div>
+
+<div id="editorBox">
+
+<h1>🤖 FUTURE CONTROL PANEL</h1>
+
+<div id="typing"></div>
+
+<div id="editor" contenteditable="true">
+✨ Tulis apa saja di sini...
+</div>
+
+<div class="menu">
+  <button class="smallBtn" onclick="saveText()">SAVE</button>
+  <button class="smallBtn" onclick="toggleMode()">MODE</button>
+  <button class="smallBtn" onclick="clearText()">CLEAR</button>
+  <button class="smallBtn" onclick="changeColor()">COLOR</button>
+</div>
+
+</div>
+
+<script>
+
+/* JAM */
+function updateClock(){
+
+  let now=new Date();
+
+  document.getElementById("clock").innerHTML=
+  now.toLocaleTimeString();
+
+}
+
+setInterval(updateClock,1000);
+
+/* LOADING CEPAT */
+function startSystem(){
+
+  document.querySelector("button").style.display="none";
+
+  document.getElementById("loadingBox").style.display="block";
+
+  let i=0;
+
+  let load=setInterval(()=>{
+
+    i += 5;
+
+    document.getElementById("bar").style.width=i+"%";
+
+    document.getElementById("percent").innerHTML=i+"%";
+
+    if(i>=100){
+
+      clearInterval(load);
+
+      setTimeout(()=>{
+
+        document.getElementById("home").style.display="none";
+
+        document.getElementById("editorBox").style.display="block";
+
+        typingEffect();
+
+      },200);
+
+    }
+
+  },15);
+
+}
+
+/* SAVE */
+function saveText(){
+
+  let text=document.getElementById("editor").innerHTML;
+
+  localStorage.setItem("txooText",text);
+
+  alert("⚡ Berhasil disimpan");
+
+}
+
+/* LOAD */
+window.onload=function(){
+
+  let save=localStorage.getItem("txooText");
+
+  if(save){
+
+    document.getElementById("editor").innerHTML=save;
+
+  }
+
+}
+
+/* MODE */
+function toggleMode(){
+
+  document.body.classList.toggle("light");
+
+}
+
+/* CLEAR */
+function clearText(){
+
+  document.getElementById("editor").innerHTML="";
+
+}
+
+/* COLOR GANTI */
+function changeColor(){
+
+  let colors=[
+  "#00fff2",
+  "#ff00ff",
+  "#00ff88",
+  "#ff4444",
+  "#ffff00"
+  ];
+
+  let random=colors[Math.floor(Math.random()*colors.length)];
+
+  document.body.style.color=random;
+
+  document.getElementById("editor").style.borderColor=random;
+
+  document.getElementById("editor").style.boxShadow=
+  "0 0 20px "+random;
+
+}
+
+/* TYPING EFFECT */
+function typingEffect(){
+
+  let text="SYSTEM CONNECTED SUCCESSFULLY ⚡";
+
+  let i=0;
+
+  let speed=setInterval(()=>{
+
+    document.getElementById("typing").innerHTML += text.charAt(i);
+
+    i++;
+
+    if(i>=text.length){
+
+      clearInterval(speed);
+
+    }
+
+  },40);
+
+}
+
+</script>
+
+</body>
+</html>
